@@ -1,13 +1,27 @@
 <template>
-  <HelloWorld />
+    <div id="home">
+        <ul>
+            <li>
+                <a href="/subtitle">字幕表示</a>
+            </li>
+            <li>
+                <a href="/form">フォーム</a>
+            </li>
+        </ul>
+    </div>
 </template>
 
 <script>
-  import HelloWorld from '../components/HelloWorld'
+    import MessageForm from '@/components/MessageForm'
 
-  export default {
-    components: {
-      HelloWorld
+    export default {
+        name: 'home',
+        components: {
+            MessageForm
+        }
     }
-  }
 </script>
+
+<style scoped>
+
+</style>
