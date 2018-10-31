@@ -1,26 +1,23 @@
 # subtitles
 
-## Project setup
+## セットアップ
 ```
 yarn install
 ```
 
+### socket.ioサーバ起動
+
+```
+node server.js
+```
+
+
 ### Compiles and hot-reloads for development
 ```
-yarn run serve
+yarn serve
 ```
 
-### Compiles and minifies for production
+### ブラウザで開く
 ```
-yarn run build
-```
-
-### Run your tests
-```
-yarn run test
-```
-
-### Lints and fixes files
-```
-yarn run lint
+http://localhost:8080 （正確なportはserveの結果を参照）
 ```
