@@ -1,12 +1,5 @@
 <template>
-    <v-app>
-        <v-toolbar app>
-            <v-toolbar-title class="headline">
-                <span>字幕アプリ</span>
-            </v-toolbar-title>
-            <v-spacer></v-spacer>
-        </v-toolbar>
-
+    <v-app dark>
         <v-content>
             <router-view/>
         </v-content>

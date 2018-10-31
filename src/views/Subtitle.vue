@@ -1,5 +1,5 @@
 <template>
-    <div id="subtitleContainer" v-bind:style="containerStyle">
+    <div id="subtitleContainer" v-bind:style="containerStyle" class="pt-4">
 
         <div class="colorPickerWrapper">
             <div v-show="showPicker.bodyBg">
@@ -35,50 +35,170 @@
             </div>
         </div>
 
+
+        <div id="controlPanelOpenButton" v-show="!showControlPanel">
+            <v-btn fab dark @click.native="showControlPanel = true">
+                <v-icon dark>fas fa-cog</v-icon>
+            </v-btn>
+        </div>
+
         <div id="controlPanel" v-show="showControlPanel">
             <div class="controlPanelHeader">
-                <button style="vertical-align: top" @click="showControlPanel = false">✕</button>
+                <v-icon large @click="showControlPanel = false">far fa-window-close</v-icon>
             </div>
-            <ul>
-                <li>
-                    <div>
-                        文字サイズ：<input type="number" v-model.number="fontSize" step="5" @change="saveSetting">px
-                    </div>
-                    <div>
-                        字幕高さ：<input type="number" v-model.number="height" step="5" @change="saveSetting">px
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        背景色：<button @click="showPicker.bodyBg = !showPicker.bodyBg">画面</button>
-                        <button @click="showPicker.subtitleBg = !showPicker.subtitleBg">字幕</button>
-                    </div>
-                    <div>
-                        字幕色：<button @click="showPicker.subtitleText = !showPicker.subtitleText">文字</button>
-                        <button @click="showPicker.subtitleTextBorder = !showPicker.subtitleTextBorder">縁取り</button>
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        字幕を
-                        <input type="number" v-model.number="speed.interval" step="1" min="1" @change="saveSetting">msごとに
-                        <input type="number" v-model.number="speed.base" step="0.1" min="1" @change="saveSetting">px移動
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        (ループ時以外)待機字幕1つ毎に<input type="number" v-model.number="speed.increase" step="0.1" min="" @change="saveSetting">px増加
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        <input id="isLoopCheckbox" type="checkbox" v-model="isLoop"><label for="isLoopCheckbox">字幕をループさせる：</label>
-                    </div>
-                    <div>
-                        <span style="margin-left: 120px;">現在の字幕速度:  {{subtitleSpeed}}</span>
-                    </div>
-                </li>
-            </ul>
+
+            <v-tabs
+                centered
+                dark
+                icons-and-text
+            >
+                <v-tabs-slider color="yellow"></v-tabs-slider>
+
+                <v-tab href="#appearance">
+                    外観
+                    <v-icon>fas fa-font</v-icon>
+                </v-tab>
+
+                <v-tab href="#speed">
+                    速度
+                    <v-icon>fas fa-tachometer-alt</v-icon>
+                </v-tab>
+
+                <v-tab href="#others">
+                    その他
+                    <v-icon>fas fa-ellipsis-h</v-icon>
+                </v-tab>
+
+                <v-tab-item id="appearance">
+                    <v-container fluid grid-list-lg>
+                        <v-layout row wrap>
+                            <v-flex xs12>
+                                <v-slider
+                                    v-model="fontSize"
+                                    always-dirty
+                                    thumb-label="always"
+                                    min="5"
+                                    max="200"
+                                    step="5"
+                                    hide-details
+                                    label="文字サイズ(px)"
+                                    @input="saveSetting"
+                                ></v-slider>
+                            </v-flex>
+
+                            <v-flex xs12>
+                                <v-slider
+                                    v-model="height"
+                                    always-dirty
+                                    thumb-label="always"
+                                    min="5"
+                                    max="500"
+                                    step="5"
+                                    hide-details
+                                    label="字幕高さ(px)"
+                                    @input="saveSetting"
+                                ></v-slider>
+                            </v-flex>
+
+                            <v-flex d-flex xs12>
+                                <div>
+                                    背景色：
+                                    <v-btn @click.native="showPicker.bodyBg = !showPicker.bodyBg">
+                                        <v-icon class="mr-2" :color="pickedColor.bodyBg.hex">fas fa-square</v-icon>
+                                        画面
+                                    </v-btn>
+                                    <v-btn @click.native="showPicker.subtitleBg = !showPicker.subtitleBg">
+                                        <v-icon class="mr-2" :color="pickedColor.subtitleBg.hex">fas fa-square</v-icon>
+                                        字幕
+                                    </v-btn>
+                                </div>
+
+                                <div>
+                                    字幕色：
+                                    <v-btn @click.native="showPicker.subtitleText = !showPicker.subtitleText">
+                                        <v-icon class="mr-2" :color="pickedColor.subtitleText.hex">fas fa-square</v-icon>
+                                        文字
+                                    </v-btn>
+                                    <v-btn @click.native="showPicker.subtitleTextBorder = !showPicker.subtitleTextBorder">
+                                        <v-icon class="mr-2" :color="pickedColor.subtitleTextBorder.hex">fas fa-square</v-icon>
+                                        縁取り
+                                    </v-btn>
+                                </div>
+                            </v-flex>
+                        </v-layout>
+                    </v-container>
+                </v-tab-item>
+
+                <v-tab-item id="speed">
+                    <v-container fluid grid-list-lg>
+                        <v-layout row wrap>
+                            <v-flex xs12>
+                                <v-slider
+                                    v-model="speed.interval"
+                                    always-dirty
+                                    thumb-label="always"
+                                    min="1"
+                                    max="20"
+                                    step="1"
+                                    hide-details
+                                    label="描画間隔(ms)"
+                                    ticks="always"
+                                    tick-size="2"
+                                    @input="saveSetting"
+                                ></v-slider>
+                            </v-flex>
+
+                            <v-flex xs12>
+                                <v-slider
+                                    v-model="speed.base"
+                                    always-dirty
+                                    thumb-label="always"
+                                    min="0.5"
+                                    max="8"
+                                    step="0.1"
+                                    hide-details
+                                    label="移動距離(px)"
+                                    @input="saveSetting"
+                                ></v-slider>
+                            </v-flex>
+
+                            <v-flex xs12>
+                                <v-slider
+                                    v-model="speed.increase"
+                                    always-dirty
+                                    thumb-label="always"
+                                    min="0"
+                                    max="2"
+                                    step="0.1"
+                                    label="待ち速度調整(px)"
+                                    ticks="always"
+                                    tick-size="2"
+                                    hint="表示待ちの字幕1つにつき、この距離を移動距離に加算して一時的に流れを早くします。字幕ループ時は無効。"
+                                    persistent-hint
+                                    @input="saveSetting"
+                                ></v-slider>
+                            </v-flex>
+                        </v-layout>
+                    </v-container>
+                </v-tab-item>
+
+                <v-tab-item id="others">
+                    <v-container fluid grid-list-lg>
+                        <v-layout row wrap>
+                            <v-flex xs12 d-flex>
+                                <v-switch
+                                    label="字幕をループさせる"
+                                    v-model="isLoop"
+                                    hide-details
+                                    class="mt-1"
+                                ></v-switch>
+
+                                <p class="title text-sm-right mb-0 mt-2">現在の字幕速度:  {{subtitleSpeed}}</p>
+                            </v-flex>
+                        </v-layout>
+                    </v-container>
+                </v-tab-item>
+            </v-tabs>
         </div>
 
         <div id="subtitleWrapper" v-bind:style="subtitleWrapperStyle">
@@ -105,7 +225,7 @@
             subtitles: [],
             counter: 1,
 
-            showControlPanel: true,
+            showControlPanel: false,
 
             showPicker: {
                 bodyBg: false,
@@ -162,11 +282,6 @@
             ulStyle() {
                 return {
                     lineHeight: `${this.height}px`,
-                }
-            },
-            controlPanelStyle() {
-                return {
-                    bottom: `${this.height + 20}px`,
                 }
             },
             subtitleTextStyle() {
@@ -226,7 +341,6 @@
                 this.speed.increase = setting.speedIncrease
             },
             saveSetting() {
-                console.log("save settings")
                 store.set('settings', {
                     height: this.height,
                     fontSize: this.fontSize,
@@ -268,17 +382,6 @@
                     text: message,
                     padding: padding,
                 })
-
-            },
-            getSubtitleLength() {
-                // 最初の要素は現在表示中として無視する
-                if (this.subtitles.length <= 2) {
-                    return 0
-                } else {
-                    return this.subtitles
-                        .map(message => message.text.length)
-                        .reduce((accumulator, currentValue) => accumulator + currentValue)
-                }
             },
             slideFirstText() {
                 if (this.subtitles.length > 0) {
@@ -308,9 +411,6 @@
                     this.slideFirstText()
                 }, this.speed.interval)
             },
-            getRandomString() {
-                return Math.random().toString(36).slice(-8)
-            },
         }
     }
 </script>
@@ -322,11 +422,6 @@
         -ms-user-select: none;
     }
 
-    button {
-        cursor: pointer;
-        background-color: rgba(144, 144, 255, 1)
-    }
-
     #subtitleContainer {
         overflow: hidden;
         position: absolute;
@@ -334,85 +429,24 @@
         left: 0;
         height: 100%;
         width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
     }
 
     #controlPanel {
-        background-color: rgba(255, 255, 255, .5);
-        text-align: right;
-        position: absolute;
-        width: 800px;
-        right: 30%;
-        top: 20%;
-        z-index: 5;
-    }
-
-    #controlPanel ul {
-        margin: 0;
-        padding: 30px;
-        list-style-type: none;
-    }
-
-    #controlPanel ul li {
-        margin: 20px 0;
-        padding: 0;
-        display: flex;
-        justify-content: space-around;
-    }
-    #controlPanel ul li:first-child {
-        margin: 0 0 20px;
-    }
-    #controlPanel ul li:last-child {
-        margin: 20px 0 0;
-    }
-
-
-    #controlPanel * {
-        font-size: 30px;
-    }
-
-    #controlPanel input[type=number] {
-        width: 80px;
-        padding: 5px;
-    }
-    #controlPanel input[type=checkbox] {
-        display: none;
-    }
-
-    #controlPanel label {
         position: relative;
-    }
-
-    #controlPanel label:before {
-        content: '';
-        width: 48px;
-        height: 48px;
-        display: inline-block;
-        position: absolute;
-        right: -48px;
-        top: -9px;
-        background-color:   #fff;
-        box-shadow:     inset 1px 2px 3px 0 #000;
-        border-radius:      6px 6px 6px 6px;
-        line-height: 55px;
-    }
-    #controlPanel input[type=checkbox]:checked + label:before {
-        content: '\2713';
-        font-size: 46px;
-        color: #ffffff;
-        background-color: rgba(144, 144, 255, 1);
+        background-color: #333333;
+        width: 800px;
+        z-index: 5;
     }
 
     #controlPanel .controlPanelHeader {
         position: absolute;
         right: 0;
         top: 0;
+        z-index:6;
     }
-    #controlPanel .controlPanelHeader button {
-        font-size: 30px !important;
-    }
-
-
-
 
     #subtitleWrapper {
         position: absolute;
@@ -432,6 +466,9 @@
     }
 
     .colorPickerWrapper {
+        position: absolute;
+        left: 0;
+        top: 0;
         margin: 40px;
         display: flex;
     }
@@ -440,7 +477,7 @@
         position: relative;
         padding: 4px 10px;
         margin: 4px;
-        background-color: #ccc;
+        background-color: #666;
         z-index: 10;
     }
 

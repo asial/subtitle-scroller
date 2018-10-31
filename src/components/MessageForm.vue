@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="messageFormWrapper">
         <form id="messageForm" @submit.prevent="send">
             <input type="text" autofocus autocomplete="off" v-model="message">
         </form>
@@ -42,6 +42,10 @@
 </script>
 
 <style scoped>
+    #messageFormWrapper {
+        height: 100%;
+        background-color: #112211;
+    }
 
     #messageForm {
         position: fixed;
@@ -56,13 +60,12 @@
         padding: 0.5em;
         width: 100%;
         font-size: 36px;
-        background-color: rgba(255, 255, 200, .3);
+        background-color: rgba(200, 255, 200, .3);
         border: solid 2px #000;
     }
 
-
     #subtitles {
-        padding: 83px 0 0;
+        padding: 100px 0 0;
         margin: 0;
         list-style-type: none;
         display: flex;
@@ -74,6 +77,6 @@
     }
 
     #subtitles li:nth-child(odd) {
-        background: #eee;
+        background: #223322;
     }
 </style>
