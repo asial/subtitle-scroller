@@ -51,6 +51,7 @@
                 centered
                 dark
                 icons-and-text
+                v-model="activeControlPanelTab"
             >
                 <v-tabs-slider color="yellow"></v-tabs-slider>
 
@@ -134,30 +135,14 @@
                         <v-layout row wrap>
                             <v-flex xs12>
                                 <v-slider
-                                    v-model="speed.interval"
-                                    always-dirty
-                                    thumb-label="always"
-                                    min="1"
-                                    max="20"
-                                    step="1"
-                                    hide-details
-                                    label="描画間隔(ms)"
-                                    ticks="always"
-                                    tick-size="2"
-                                    @input="saveSetting"
-                                ></v-slider>
-                            </v-flex>
-
-                            <v-flex xs12>
-                                <v-slider
                                     v-model="speed.base"
                                     always-dirty
                                     thumb-label="always"
-                                    min="0.5"
-                                    max="8"
+                                    min="5"
+                                    max="20"
                                     step="0.1"
                                     hide-details
-                                    label="移動距離(px)"
+                                    label="速度"
                                     @input="saveSetting"
                                 ></v-slider>
                             </v-flex>
@@ -168,12 +153,10 @@
                                     always-dirty
                                     thumb-label="always"
                                     min="0"
-                                    max="2"
+                                    max="20"
                                     step="0.1"
-                                    label="待ち速度調整(px)"
-                                    ticks="always"
-                                    tick-size="2"
-                                    hint="表示待ちの字幕1つにつき、この距離を移動距離に加算して一時的に流れを早くします。字幕ループ時は無効。"
+                                    label="待ち速度調整"
+                                    hint="表示待ちの字幕1つにつき、この値を速度に加算して一時的に流れを早くします。字幕ループ時は無効。"
                                     persistent-hint
                                     @input="saveSetting"
                                 ></v-slider>
@@ -214,7 +197,7 @@
 <script>
     import Vue from 'vue'
     import VueSocketio from 'vue-socket.io'
-    Vue.use(VueSocketio, 'http://localhost:3000')
+    Vue.use(VueSocketio, 'http://localhost:3300')
 
     import store from 'store'
     import { Swatches } from 'vue-color'
@@ -225,7 +208,8 @@
             subtitles: [],
             counter: 1,
 
-            showControlPanel: false,
+            showControlPanel: true,
+            activeControlPanelTab: 'appearance',
 
             showPicker: {
                 bodyBg: false,
@@ -270,6 +254,7 @@
             containerStyle() {
                 return {
                     backgroundColor: this.pickedColor.bodyBg.hex,
+                    paddingBottom: `${this.height}px`,
                 }
             },
             subtitleWrapperStyle() {
@@ -394,6 +379,7 @@
 
                         if (subtitleEl.clientWidth <= Math.abs(subtitleEl.offsetLeft)) {
                             subtitleEl.style.marginLeft = '0px'
+
                             const message = this.subtitles.shift()
                             if (this.isLoop) {
                                 setTimeout( () => {
@@ -407,9 +393,7 @@
                     }
                 }
 
-                setTimeout( () => {
-                    this.slideFirstText()
-                }, this.speed.interval)
+                window.requestAnimationFrame(this.slideFirstText)
             },
         }
     }
@@ -431,7 +415,7 @@
         width: 100%;
         display: flex;
         justify-content: center;
-        align-items: flex-start;
+        align-items: center;
     }
 
     #controlPanel {

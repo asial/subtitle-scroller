@@ -7,6 +7,6 @@ io.on('connection', socket => {
     })
 })
 
-app.listen(3000, () => {
-    console.log('listening on localhost:3000')
+app.listen(3300, () => {
+    console.log('listening on localhost:3300')
 })
