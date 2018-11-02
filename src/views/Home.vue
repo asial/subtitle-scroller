@@ -2,10 +2,10 @@
     <div id="home">
         <ul>
             <li>
-                <a href="/subtitle">字幕表示</a>
+                <router-link :to="{name: 'subtitle'}">字幕表示</router-link>
             </li>
             <li>
-                <a href="/form">フォーム</a>
+                <router-link :to="{name: 'form'}">フォーム</router-link>
             </li>
         </ul>
     </div>

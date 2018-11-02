@@ -7,7 +7,6 @@
 </template>
 
 <script>
-
     export default {
         name: 'App',
         data () {
@@ -17,3 +16,9 @@
         }
     }
 </script>
+
+<style>
+    body {
+        overflow: hidden;
+    }
+</style>

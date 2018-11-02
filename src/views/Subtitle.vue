@@ -55,20 +55,59 @@
             >
                 <v-tabs-slider color="yellow"></v-tabs-slider>
 
-                <v-tab href="#appearance">
-                    外観
-                    <v-icon>fas fa-font</v-icon>
-                </v-tab>
-
                 <v-tab href="#speed">
                     速度
                     <v-icon>fas fa-tachometer-alt</v-icon>
+                </v-tab>
+
+                <v-tab href="#appearance">
+                    外観
+                    <v-icon>fas fa-font</v-icon>
                 </v-tab>
 
                 <v-tab href="#others">
                     その他
                     <v-icon>fas fa-ellipsis-h</v-icon>
                 </v-tab>
+
+                <v-tab-item id="speed">
+                    <v-container fluid grid-list-lg>
+                        <v-layout row wrap>
+                            <v-flex xs12>
+                                <v-slider
+                                    v-model="speed.base"
+                                    always-dirty
+                                    thumb-label="always"
+                                    min="5"
+                                    max="20"
+                                    step="0.1"
+                                    hide-details
+                                    label="速度"
+                                    @input="saveSetting"
+                                ></v-slider>
+                            </v-flex>
+
+                            <v-flex xs12>
+                                <v-slider
+                                    v-model="speed.increase"
+                                    always-dirty
+                                    thumb-label="always"
+                                    min="0"
+                                    max="10"
+                                    step="0.1"
+                                    label="待ち速度調整"
+                                    hint="表示待ちの字幕1つにつき、この値を速度に加算して一時的に流れを早くします。字幕ループ時は無効。"
+                                    persistent-hint
+                                    @input="saveSetting"
+                                ></v-slider>
+                            </v-flex>
+
+                            <v-flex xs12>
+                                <p class="title mb-0 mt-3">現在の字幕速度:  {{subtitleSpeed}}</p>
+                            </v-flex>
+                        </v-layout>
+                    </v-container>
+                </v-tab-item>
 
                 <v-tab-item id="appearance">
                     <v-container fluid grid-list-lg>
@@ -130,41 +169,6 @@
                     </v-container>
                 </v-tab-item>
 
-                <v-tab-item id="speed">
-                    <v-container fluid grid-list-lg>
-                        <v-layout row wrap>
-                            <v-flex xs12>
-                                <v-slider
-                                    v-model="speed.base"
-                                    always-dirty
-                                    thumb-label="always"
-                                    min="5"
-                                    max="20"
-                                    step="0.1"
-                                    hide-details
-                                    label="速度"
-                                    @input="saveSetting"
-                                ></v-slider>
-                            </v-flex>
-
-                            <v-flex xs12>
-                                <v-slider
-                                    v-model="speed.increase"
-                                    always-dirty
-                                    thumb-label="always"
-                                    min="0"
-                                    max="20"
-                                    step="0.1"
-                                    label="待ち速度調整"
-                                    hint="表示待ちの字幕1つにつき、この値を速度に加算して一時的に流れを早くします。字幕ループ時は無効。"
-                                    persistent-hint
-                                    @input="saveSetting"
-                                ></v-slider>
-                            </v-flex>
-                        </v-layout>
-                    </v-container>
-                </v-tab-item>
-
                 <v-tab-item id="others">
                     <v-container fluid grid-list-lg>
                         <v-layout row wrap>
@@ -176,7 +180,6 @@
                                     class="mt-1"
                                 ></v-switch>
 
-                                <p class="title text-sm-right mb-0 mt-2">現在の字幕速度:  {{subtitleSpeed}}</p>
                             </v-flex>
                         </v-layout>
                     </v-container>
@@ -209,7 +212,7 @@
             counter: 1,
 
             showControlPanel: true,
-            activeControlPanelTab: 'appearance',
+            activeControlPanelTab: 'speed',
 
             showPicker: {
                 bodyBg: false,
